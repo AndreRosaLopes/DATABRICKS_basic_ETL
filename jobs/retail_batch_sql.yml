@@ -7,21 +7,21 @@ resources:
 # Bronze
         - task_key: Load_Bronze_Customers
           notebook_task:
-            notebook_path: notebooks/batch_sql/batch_sql_Bronze_Customers_COPY_INTO.ipynb
+            notebook_path: ../notebooks/batch_sql/batch_sql_Bronze_Customers_COPY_INTO.ipynb
             source: WORKSPACE
         - task_key: Load_Bronze_Products
           notebook_task:
-            notebook_path: notebooks/batch_sql/batch_sql_Bronze_Products_COPY_INTO.ipynb
+            notebook_path: ../notebooks/batch_sql/batch_sql_Bronze_Products_COPY_INTO.ipynb
             source: WORKSPACE
         - task_key: Load_Bronze_Sales
           notebook_task:
-            notebook_path: notebooks/batch_sql/batch_sql_Bronze_Sales_COPY_INTO.ipynb
+            notebook_path: ../notebooks/batch_sql/batch_sql_Bronze_Sales_COPY_INTO.ipynb
             source: WORKSPACE
         - task_key: Set_Dates_Control_for_Bronze_Customers
           depends_on:
             - task_key: Load_Bronze_Customers
           notebook_task:
-            notebook_path: notebooks/batch_sql/Date_Control_Bronze.ipynb
+            notebook_path: ../notebooks/batch_sql/Date_Control_Bronze.ipynb
             base_parameters:
               table: bronze_customers
             source: WORKSPACE
@@ -29,7 +29,7 @@ resources:
           depends_on:
             - task_key: Load_Bronze_Products
           notebook_task:
-            notebook_path: notebooks/batch_sql/Date_Control_Bronze.ipynb
+            notebook_path: ../notebooks/batch_sql/Date_Control_Bronze.ipynb
             base_parameters:
               table: bronze_products
             source: WORKSPACE
@@ -37,7 +37,7 @@ resources:
           depends_on:
             - task_key: Load_Bronze_Sales
           notebook_task:
-            notebook_path: notebooks/batch_sql/Date_Control_Bronze.ipynb
+            notebook_path: ../notebooks/batch_sql/Date_Control_Bronze.ipynb
             base_parameters:
               table: bronze_sales
             source: WORKSPACE
@@ -49,7 +49,7 @@ resources:
             - task_key: Set_Dates_Control_for_Bronze_Sales
           run_if: ALL_DONE
           notebook_task:
-            notebook_path: notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
             base_parameters:
               table_name: silver_customers
             source: WORKSPACE
@@ -61,7 +61,7 @@ resources:
             task:
               task_key: Load_Silver_Customers_iteration
               notebook_task:
-                notebook_path: notebooks/batch_sql/batch_sql_Silver_Customers_plus_Finish_Control.ipynb
+                notebook_path: ../notebooks/batch_sql/batch_sql_Silver_Customers_plus_Finish_Control.ipynb
                 base_parameters:
                   moviment_date: "{{input}}"
                 source: WORKSPACE
@@ -72,7 +72,7 @@ resources:
             - task_key: Set_Dates_Control_for_Bronze_Sales
           run_if: ALL_DONE
           notebook_task:
-            notebook_path: notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
             base_parameters:
               table_name: silver_products
             source: WORKSPACE
@@ -84,7 +84,7 @@ resources:
             task:
               task_key: Load_Silver_Products_iteration
               notebook_task:
-                notebook_path: notebooks/batch_sql/batch_sql_Silver_Products_plus_Finish_Control.ipynb
+                notebook_path: ../notebooks/batch_sql/batch_sql_Silver_Products_plus_Finish_Control.ipynb
                 base_parameters:
                   moviment_date: "{{input}}"
                 source: WORKSPACE
@@ -95,7 +95,7 @@ resources:
             - task_key: Set_Dates_Control_for_Bronze_Sales
           run_if: ALL_DONE
           notebook_task:
-            notebook_path: notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
             base_parameters:
               table_name: silver_sales
             source: WORKSPACE
@@ -107,7 +107,7 @@ resources:
             task:
               task_key: Load_Silver_Sales_iteration
               notebook_task:
-                notebook_path: notebooks/batch_sql/batch_sql_Silver_Sales_plus_Finish_Control.ipynb
+                notebook_path: ../notebooks/batch_sql/batch_sql_Silver_Sales_plus_Finish_Control.ipynb
                 base_parameters:
                   moviment_date: "{{input}}"
                 source: WORKSPACE
@@ -119,7 +119,7 @@ resources:
             - task_key: Load_Silver_Sales
           run_if: ALL_DONE
           notebook_task:
-            notebook_path: notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
             base_parameters:
               table_name: gold_customers
             source: WORKSPACE
@@ -131,7 +131,7 @@ resources:
             task:
               task_key: Load_Gold_Customers_iteration
               notebook_task:
-                notebook_path: notebooks/batch_sql/batch_sql_Gold_Customers_plus_Finish_Control.ipynb
+                notebook_path: ../notebooks/batch_sql/batch_sql_Gold_Customers_plus_Finish_Control.ipynb
                 base_parameters:
                   moviment_date: "{{input}}"
                 source: WORKSPACE
@@ -142,7 +142,7 @@ resources:
             - task_key: Load_Silver_Sales
           run_if: ALL_DONE
           notebook_task:
-            notebook_path: notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
             base_parameters:
               table_name: gold_products
             source: WORKSPACE
@@ -154,7 +154,7 @@ resources:
             task:
               task_key: Load_Gold_Products_iteration
               notebook_task:
-                notebook_path: notebooks/batch_sql/batch_sql_Gold_Products_plus_Finish_Control.ipynb
+                notebook_path: ../notebooks/batch_sql/batch_sql_Gold_Products_plus_Finish_Control.ipynb
                 base_parameters:
                   moviment_date: "{{input}}"
                 source: WORKSPACE
@@ -164,7 +164,7 @@ resources:
             - task_key: Load_Gold_Products
           run_if: ALL_DONE
           notebook_task:
-            notebook_path: notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
             base_parameters:
               table_name: gold_sales
             source: WORKSPACE
@@ -176,7 +176,7 @@ resources:
             task:
               task_key: Load_Gold_Sales_iteration
               notebook_task:
-                notebook_path: notebooks/batch_sql/batch_sql_Gold_Sales_plus_Finish_Control.ipynb
+                notebook_path: ../notebooks/batch_sql/batch_sql_Gold_Sales_plus_Finish_Control.ipynb
                 base_parameters:
                   moviment_date: "{{input}}"
                 source: WORKSPACE
