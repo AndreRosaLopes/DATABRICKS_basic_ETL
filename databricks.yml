@@ -2,7 +2,7 @@
 # See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
 bundle:
   name: retail
-  uuid: 9f84424c-00ec-4f12-b4fe-e80a541fce6e
+  uuid: 5082ae65-3453-437a-86ea-49d79bf97595
 
 artifacts:
   python_artifact:
@@ -10,8 +10,10 @@ artifacts:
     build: uv build --wheel
 
 include:
-  - resources/*.yml
-  - resources/*/*.yml
+  # - resources/*.yml
+  # - resources/*/*.yml
+  - jobs/*.yml
+  - jobs/*/*.yml
 
 targets:
   dev:
