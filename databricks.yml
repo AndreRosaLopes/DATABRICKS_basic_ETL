@@ -4,10 +4,10 @@ bundle:
   name: retail
   uuid: 5082ae65-3453-437a-86ea-49d79bf97595
 
-artifacts:
-  python_artifact:
-    type: whl
-    build: uv build --wheel
+# artifacts:
+#   python_artifact:
+#     type: whl
+#     build: uv build --wheel
 
 include:
   # - resources/*.yml
@@ -25,6 +25,8 @@ targets:
     default: true
     workspace:
       host: https://dbc-85961337-6171.cloud.databricks.com
+      # We explicitly deploy to /Workspace/Users/andrerosalopes@gmail.com to make sure we only have a single copy.
+      root_path: /Workspace/Users/andrerosalopes@gmail.com/${bundle.target}_${bundle.name}
 
   prod:
     mode: production
