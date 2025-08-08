@@ -56,6 +56,5 @@ The descriptive dimensions for this model are:
 
 #### 4. Identify the Facts
 The fact table will represent **individual sales items**.
----
 
 
