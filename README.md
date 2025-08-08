@@ -9,10 +9,18 @@ The scope includes:
 - Exploring **metadata-driven pipelines** for flexible and configurable data ingestion
 
 ---
+## 🔗 Links 🔗
 
-## Requirements (High Level)
+* 🔗 [Short description of the overall project](#short-description-of-the-overall-project) - *requirements and data modeling.*  
+* 🔗 [First approach](First_solution.md) - *pure SQL notebooks within a single job (workflow) using DAB, implementing day-level movement control*
 
-![Requirements Diagram](excalidraw/requirements.png)
+
+## Short description of the overall project
+
+
+### Requirements (High Level)
+
+![Requirements Diagram](excalidraw/short_description.png)
 
 1. **Daily Batch Input**  
    We will receive daily batches of JSON files (generated in Python) in the following formats:
@@ -26,9 +34,9 @@ The scope includes:
 
 ---
 
-## Design Process
+### Design Process
 
-### 1. Select the Business Process to Model
+#### 1. Select the Business Process to Model
 The business process chosen for this case study is **retail sales**.  
 The dataset will allow us to analyze:
 - Which products are sold
@@ -37,32 +45,17 @@ The dataset will allow us to analyze:
 - At what price
 - On which date and time
 
-### 2. Define the Grain
+#### 2. Define the Grain
 We define the grain as **a single product sold**, representing the most granular data available from the operational system.
 
-### 3. Choose the Dimensions
+#### 3. Choose the Dimensions
 The descriptive dimensions for this model are:
 - **Product**
 - **Customer**
 - **Date**
 
-### 4. Identify the Facts
+#### 4. Identify the Facts
 The fact table will represent **individual sales items**.
-
----
-
-## First Solution: [*pure SQL notebooks*](First_solution.md)
-
-The objectives are:
-
-- Define tables and views to control data movement dates  
-- Create `tasks` to manage date-based loads  
-- Explore the use of `COPY INTO` (considered a legacy approach compared to Auto Loader for pure SQL solutions)  
-- Define **quarantine tables** and a mechanism to re-ingest quarantined data  
-- Use Databricks **Workflows** to orchestrate tasks (via notebooks)  
-  - The approach is to have one job per project, establishing dependencies and using ```FOR EACH``` to process tasks incrementally — one day at a time — whenever possible.
-  - Develop the job directly from the YAML file rather than the UI — this approach is faster, easier to maintain, and offers a clearer overall view of the job structure.
-
 ---
 
 
