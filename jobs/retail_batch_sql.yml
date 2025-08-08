@@ -1,0 +1,194 @@
+resources:
+  jobs:
+    retail_batch_sql:
+      name: retail_batch_sql
+      description: "Description of the job: Batch sql; Project Retail"
+      tasks:
+# Bronze
+        - task_key: Load_Bronze_Customers
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/batch_sql_Bronze_Customers_COPY_INTO.ipynb
+            source: WORKSPACE
+        - task_key: Load_Bronze_Products
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/batch_sql_Bronze_Products_COPY_INTO.ipynb
+            source: WORKSPACE
+        - task_key: Load_Bronze_Sales
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/batch_sql_Bronze_Sales_COPY_INTO.ipynb
+            source: WORKSPACE
+        - task_key: Set_Dates_Control_for_Bronze_Customers
+          depends_on:
+            - task_key: Load_Bronze_Customers
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/Date_Control_Bronze.ipynb
+            base_parameters:
+              table: bronze_customers
+            source: WORKSPACE
+        - task_key: Set_Dates_Control_for_Bronze_Products
+          depends_on:
+            - task_key: Load_Bronze_Products
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/Date_Control_Bronze.ipynb
+            base_parameters:
+              table: bronze_products
+            source: WORKSPACE
+        - task_key: Set_Dates_Control_for_Bronze_Sales
+          depends_on:
+            - task_key: Load_Bronze_Sales
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/Date_Control_Bronze.ipynb
+            base_parameters:
+              table: bronze_sales
+            source: WORKSPACE
+# Silver
+        - task_key: Start_Silver_Customers
+          depends_on:
+            - task_key: Set_Dates_Control_for_Bronze_Customers
+            - task_key: Set_Dates_Control_for_Bronze_Products
+            - task_key: Set_Dates_Control_for_Bronze_Sales
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            base_parameters:
+              table_name: silver_customers
+            source: WORKSPACE
+        - task_key: Load_Silver_Customers
+          depends_on:
+            - task_key: Start_Silver_Customers
+          for_each_task:
+            inputs: "{{tasks.Start_Silver_Customers.values.moviment_date}}"
+            task:
+              task_key: Load_Silver_Customers_iteration
+              notebook_task:
+                notebook_path: ../notebooks/batch_sql/batch_sql_Silver_Customers_plus_Finish_Control.ipynb
+                base_parameters:
+                  moviment_date: "{{input}}"
+                source: WORKSPACE
+        - task_key: Start_Silver_Products
+          depends_on:
+            - task_key: Set_Dates_Control_for_Bronze_Customers
+            - task_key: Set_Dates_Control_for_Bronze_Products
+            - task_key: Set_Dates_Control_for_Bronze_Sales
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            base_parameters:
+              table_name: silver_products
+            source: WORKSPACE
+        - task_key: Load_Silver_Products
+          depends_on:
+            - task_key: Start_Silver_Products
+          for_each_task:
+            inputs: "{{tasks.Start_Silver_Products.values.moviment_date}}"
+            task:
+              task_key: Load_Silver_Products_iteration
+              notebook_task:
+                notebook_path: ../notebooks/batch_sql/batch_sql_Silver_Products_plus_Finish_Control.ipynb
+                base_parameters:
+                  moviment_date: "{{input}}"
+                source: WORKSPACE
+        - task_key: Start_Silver_Sales
+          depends_on:
+            - task_key: Set_Dates_Control_for_Bronze_Customers
+            - task_key: Set_Dates_Control_for_Bronze_Products
+            - task_key: Set_Dates_Control_for_Bronze_Sales
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            base_parameters:
+              table_name: silver_sales
+            source: WORKSPACE
+        - task_key: Load_Silver_Sales
+          depends_on:
+            - task_key: Start_Silver_Sales
+          for_each_task:
+            inputs: "{{tasks.Start_Silver_Sales.values.moviment_date}}"
+            task:
+              task_key: Load_Silver_Sales_iteration
+              notebook_task:
+                notebook_path: ../notebooks/batch_sql/batch_sql_Silver_Sales_plus_Finish_Control.ipynb
+                base_parameters:
+                  moviment_date: "{{input}}"
+                source: WORKSPACE
+# Gold
+        - task_key: Start_Gold_Customers
+          depends_on:
+            - task_key: Load_Silver_Customers
+            - task_key: Load_Silver_Products
+            - task_key: Load_Silver_Sales
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            base_parameters:
+              table_name: gold_customers
+            source: WORKSPACE
+        - task_key: Load_Gold_Customers
+          depends_on:
+            - task_key: Start_Gold_Customers
+          for_each_task:
+            inputs: "{{tasks.Start_Gold_Customers.values.moviment_date}}"
+            task:
+              task_key: Load_Gold_Customers_iteration
+              notebook_task:
+                notebook_path: ../notebooks/batch_sql/batch_sql_Gold_Customers_plus_Finish_Control.ipynb
+                base_parameters:
+                  moviment_date: "{{input}}"
+                source: WORKSPACE
+        - task_key: Start_Gold_Products
+          depends_on:
+            - task_key: Load_Silver_Customers
+            - task_key: Load_Silver_Products
+            - task_key: Load_Silver_Sales
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            base_parameters:
+              table_name: gold_products
+            source: WORKSPACE
+        - task_key: Load_Gold_Products
+          depends_on:
+            - task_key: Start_Gold_Products
+          for_each_task:
+            inputs: "{{tasks.Start_Gold_Products.values.moviment_date}}"
+            task:
+              task_key: Load_Gold_Products_iteration
+              notebook_task:
+                notebook_path: ../notebooks/batch_sql/batch_sql_Gold_Products_plus_Finish_Control.ipynb
+                base_parameters:
+                  moviment_date: "{{input}}"
+                source: WORKSPACE
+        - task_key: Start_Gold_Sales
+          depends_on:
+            - task_key: Load_Gold_Customers
+            - task_key: Load_Gold_Products
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ../notebooks/batch_sql/Date_Control_Start_Silver_Gold.ipynb
+            base_parameters:
+              table_name: gold_sales
+            source: WORKSPACE
+        - task_key: Load_Gold_Sales
+          depends_on:
+            - task_key: Start_Gold_Sales
+          for_each_task:
+            inputs: "{{tasks.Start_Gold_Sales.values.moviment_date}}"
+            task:
+              task_key: Load_Gold_Sales_iteration
+              notebook_task:
+                notebook_path: ../notebooks/batch_sql/batch_sql_Gold_Sales_plus_Finish_Control.ipynb
+                base_parameters:
+                  moviment_date: "{{input}}"
+                source: WORKSPACE
+      tags:
+        Project: Retail
+      queue:
+        enabled: true
+      parameters:
+        - name: catalog
+          default: dev
+        - name: project
+          default: Retail
+        - name: schema
+          default: retail_batch_sql
+      performance_target: STANDARD
