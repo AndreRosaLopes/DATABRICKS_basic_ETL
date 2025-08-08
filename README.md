@@ -1,6 +1,12 @@
 # Databricks – Basic Retail Project
 
-The goal of this project is to explore and evaluate key Databricks features through a retail sales use case.
+The goal of this project is to explore and evaluate key Databricks capabilities through a retail sales use case.  
+The scope includes:
+
+- Developing notebooks using **SQL**, **Python**, and **Delta Live Tables** (declarative pipelines)  
+- Managing data updates with **day-level precision** (movement control)  
+- Implementing **CI/CD** workflows — including unit tests, integration tests, and **GitHub Actions** automation  
+- Exploring **metadata-driven pipelines** for flexible and configurable data ingestion
 
 ---
 
@@ -56,11 +62,6 @@ The objectives are:
 - Use Databricks **Workflows** to orchestrate tasks (via notebooks)  
   - The approach is to have one job per project, establishing dependencies and using ```FOR EACH``` to process tasks incrementally — one day at a time — whenever possible.
   - Develop the job directly from the YAML file rather than the UI — this approach is faster, easier to maintain, and offers a clearer overall view of the job structure.
-- Leverage the following tools for development:
-  - **Databricks Asset Bundles**
-  - **Databricks Connect**
-  - **GitHub**
-  - **VS Code**
 
 ---
 
