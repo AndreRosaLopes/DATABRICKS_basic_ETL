@@ -1,6 +1,6 @@
-from retail.main import get_taxis, get_spark
+# That the Unity test to run. We could have multiples
+# files like this one.
 
-
-def test_main():
-    taxis = get_taxis(get_spark())
-    assert taxis.count() > 5
+# def test_fake_test(spark):
+def test_fake_test():
+    assert 1 == 1

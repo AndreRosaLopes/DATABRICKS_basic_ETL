@@ -1,0 +1,56 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  ci-job:
+    name: Continuous Integration Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Starting Message
+        run: echo "Starting Continuous Integration Process"
+
+# Checkout repository. It clones your repository to the runners
+# workspace so that any subsequent steps such as running tests, 
+# building artifacts, or deploying the code can actually see and
+# operate on the source files.
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+# Install python version for unity test
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+# Install dependecies + pytest-html. We could also run from datbricks (connection).
+      - name: Install dependecies + pytest-html
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-pyspark.txt
+
+# Run pytest & generate HTML report
+      - name: Run pytest & generate HTML report
+        run: |
+          pytest \
+            --disable-warnings \
+            --cov=./src \
+            --cov-report=html
+
+# So this step takes files or directories from the runners file system.
+# It bundles them up as a zip and uploads them as named artifacts, which
+# you can later download from GitHub actions user interface or pass it 
+# into other jobs.
+      - name: Upload coverage HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: covergage-html
+          path: htmlcov
+
