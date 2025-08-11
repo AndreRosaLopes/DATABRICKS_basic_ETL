@@ -42,7 +42,7 @@ jobs:
           pytest \
             --disable-warnings \
             --cov=./src \
-            --cov-report=hmtl
+            --cov-report=html
 
 # So this step takes files or directories from the runners file system.
 # It bundles them up as a zip and uploads them as named artifacts, which
